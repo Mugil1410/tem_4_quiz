@@ -1,36 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Team 4 Quiz</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
     <style>
         body {
-            background: linear-gradient(135deg, #fff3e0, #ffe0b2); /* soft yellow/orange tones */
+            font-family: "Poppins", sans-serif;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            font-family: Poppins, sans-serif;
-            color: #333;
-            padding: 40px 0;
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            overflow-x: hidden;
         }
 
+        /* Glass container */
         .glass {
-            background: rgba(255, 248, 230, 0.6); /* soft light cream */
+            background: rgba(255, 248, 230, 0.6);
             backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 30px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, .15);
-            text-align: center;
-            position: relative;
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 22px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
             color: #333;
+            text-align: center;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 500px;
+            position: relative;
+        }
+
+        /* Blobs */
+        .blob {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .blob.one {
+            background: #ffcc80;
+            top: -60px;
+            left: -60px;
+        }
+
+        .blob.two {
+            background: #fff59d;
+            bottom: -60px;
+            right: -60px;
+        }
+
+        /* Mockup / icon box */
+        .mockup {
+            height: 150px;
+            border-radius: 16px;
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.6),
+                    rgba(255, 255, 255, 0.3));
+            font-size: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .btn-start,
+        #spinBtn,
+        #restartBtn {
+            background: linear-gradient(135deg, #ffd54f, #ffcc80);
+            border: none;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .btn-start:hover,
+        #spinBtn:hover,
+        #restartBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            color: #fff;
         }
 
         /* Wheel */
@@ -38,13 +95,13 @@
             position: relative;
             width: 300px;
             height: 300px;
-            margin: 0 auto 20px;
+            margin: 20px auto;
             border-radius: 50%;
-            border: 8px solid #ffd54f; /* soft yellow border */
-            background: #ffcc80; /* soft orange wheel */
+            border: 8px solid #ffd54f;
+            background: #ffcc80;
+            display: none;
         }
 
-        /* Numbers around wheel */
         .number {
             position: absolute;
             width: 30px;
@@ -63,33 +120,17 @@
             transition: background 0.3s;
         }
 
-        /* Arrow */
         #arrow {
             position: absolute;
             top: 50%;
             left: 50%;
             width: 6px;
             height: 120px;
-            background: #f3722c; /* soft red-orange */
+            background: #f3722c;
             transform-origin: bottom center;
             transform: translate(-50%, -100%) rotate(0deg);
             border-radius: 3px;
             z-index: 10;
-        }
-
-        /* Spin button */
-        #spinBtn {
-            margin-top: 20px;
-            font-weight: bold;
-            background: #ffd54f;
-            color: #333;
-            border: none;
-            transition: all 0.3s;
-        }
-
-        #spinBtn:hover {
-            background: #f3722c;
-            color: #fff;
         }
 
         /* Question Card */
@@ -103,7 +144,6 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
-        /* Options */
         .option {
             background: #fff3d6;
             color: #333;
@@ -143,19 +183,7 @@
             position: relative;
         }
 
-        #restartBtn {
-            background: #ffd54f;
-            color: #333;
-            border: none;
-            margin-top: 15px;
-        }
-
-        #restartBtn:hover {
-            background: #f3722c;
-            color: #fff;
-        }
-
-        /* Confetti container */
+        /* Confetti */
         #confettiContainer {
             position: fixed;
             top: 0;
@@ -189,7 +217,7 @@
         }
 
         /* Footer */
-        footer.footer {
+        footer {
             width: 100%;
             display: flex;
             justify-content: center;
@@ -197,7 +225,7 @@
             z-index: 1;
         }
 
-        footer.footer .glass-footer {
+        footer .glass-footer {
             background: rgba(255, 248, 230, 0.6);
             backdrop-filter: blur(10px);
             border-radius: 16px;
@@ -205,7 +233,7 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
-        footer.footer p {
+        footer p {
             margin: 0;
             font-size: 0.85rem;
             color: #333;
@@ -215,27 +243,45 @@
 </head>
 
 <body>
-    <div class="glass">
-        <h3>🎡 Team 4 Quiz</h3>
+    <!-- Background blobs -->
+    <div class="blob one"></div>
+    <div class="blob two"></div>
 
-        <!-- Wheel -->
+    <!-- Main container -->
+    <div class="glass" id="startPage">
+        <h1 class="fw-bold mb-2">
+            Team 4 <span style="color: #ffcc80">quiz</span>
+        </h1>
+        <p class="small opacity-75 mb-4">
+            Welcome! Spin, play, and test your knowledge 🚀
+        </p>
+        <div class="mockup">🎡🧠</div>
+        <button class="btn btn-start w-100 py-3 rounded-3" id="startBtn">
+            Start Quiz
+        </button>
+        <div class="d-flex justify-content-center gap-3 mt-3 small opacity-75">
+            <span>⏱️ Quick</span>
+            <span>🎯 Smart</span>
+            <span>🔥 Fun</span>
+        </div>
+    </div>
+
+    <!-- Quiz container -->
+    <div class="glass" id="quizPage" style="display: none">
+        <h3>🎡 Team 4 Quiz</h3>
         <div id="wheel">
             <div id="arrow"></div>
+            
         </div>
         <button id="spinBtn" class="btn">SPIN WHEEL</button>
-
-        <div class="mt-3 fw-bold">
-            Score: <span id="score">0</span>
-        </div>
-
-        <!-- Question Card -->
+        <div class="mt-3 fw-bold">Score: <span id="score">0</span></div>
         <div id="questionCard">
             <h5 id="question"></h5>
             <div id="options"></div>
-            <button id="tryAgainBtn" class="btn btn-light w-100 mt-3">Next 🔄</button>
+            <button id="tryAgainBtn" class="btn btn-light w-100 mt-3">
+                Next 🔄
+            </button>
         </div>
-
-        <!-- Congrats Page -->
         <div id="congratsPage">
             <h2>🎉 Congratulations! 🎉</h2>
             <p id="finalMessage"></p>
@@ -243,25 +289,40 @@
         </div>
     </div>
 
-    <!-- Confetti container -->
+    <!-- Confetti -->
     <div id="confettiContainer"></div>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="glass-footer">
-            <p>Team Members: Kanmani</p>
+            <p>By:Aishwarya Jain, Nivedha NP, Kanmani S, Shivani, Janani A, Kaviya Sritha</p>
         </div>
     </footer>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Add this in <head> or before your main script -->
+    <script src="../questions.js"></script>
     <script>
         $(function () {
             const questions = [
                 { q: "2 + 2 = ?", o: ["2", "3", "4", "5"], a: 2 },
-                { q: "Capital of India?", o: ["Delhi", "Mumbai", "Chennai", "Kolkata"], a: 0 },
-                { q: "HTML stands for?", o: ["HighText", "Hyper Text Markup Language", "Tool", "None"], a: 1 },
+                {
+                    q: "Capital of India?",
+                    o: ["Delhi", "Mumbai", "Chennai", "Kolkata"],
+                    a: 0,
+                },
+                {
+                    q: "HTML stands for?",
+                    o: ["HighText", "Hyper Text Markup Language", "Tool", "None"],
+                    a: 1,
+                },
                 { q: "CSS used for?", o: ["Logic", "Styling", "DB", "Server"], a: 1 },
                 { q: "JS runs in?", o: ["Browser", "Server", "Both", "None"], a: 2 },
-                { q: "Bootstrap is?", o: ["CSS Framework", "JS Lib", "DB", "OS"], a: 0 },
+                {
+                    q: "Bootstrap is?",
+                    o: ["CSS Framework", "JS Lib", "DB", "OS"],
+                    a: 0,
+                },
                 { q: "HTTP is?", o: ["Protocol", "Tool", "Lang", "DB"], a: 0 },
                 { q: "SQL used for?", o: ["Design", "DB", "Server", "Style"], a: 1 },
                 { q: "React is?", o: ["Framework", "Library", "OS", "DB"], a: 1 },
@@ -270,42 +331,58 @@
                 { q: "JS keyword?", o: ["var", "int", "string", "float"], a: 0 },
                 { q: "HTML tag?", o: ["div", "echo", "print", "var"], a: 0 },
                 { q: "API means?", o: ["Interface", "Tool", "DB", "OS"], a: 0 },
-                { q: "Git is?", o: ["VCS", "IDE", "OS", "DB"], a: 0 }
+                { q: "Git is?", o: ["VCS", "IDE", "OS", "DB"], a: 0 },
             ];
 
-            let totalNumbers = questions.length;
-            let wheelRadius = 130;
-            let rotation = 0;
-            let score = 0;
-            let usedNumbers = [];
+            let totalNumbers = questions.length,
+                wheelRadius = 130,
+                rotation = 0,
+                score = 0,
+                usedNumbers = [];
 
-            // Build numbers
+            // Build numbers on wheel
             for (let i = 0; i < totalNumbers; i++) {
                 const angle = (360 / totalNumbers) * i - 90;
-                const x = wheelRadius * Math.cos(angle * Math.PI / 180) - 13;
-                const y = wheelRadius * Math.sin(angle * Math.PI / 180) - 13;
-                $("#wheel").append(`<div class="number" style="transform: translate(${x}px, ${y}px);">${i + 1}</div>`);
+                const x = wheelRadius * Math.cos((angle * Math.PI) / 180) - 13;
+                const y = wheelRadius * Math.sin((angle * Math.PI) / 180) - 13;
+                $("#wheel").append(
+                    `<div class="number" style="transform: translate(${x}px,${y}px)">${i + 1}</div>`,
+                );
             }
 
-            // Spin
+            // Start button click
+            $("#startBtn").click(function () {
+                $("#startPage").fadeOut();
+                $("#quizPage").fadeIn();
+                $("#wheel").fadeIn();
+            });
+
+            // Spin wheel
             $("#spinBtn").click(function () {
                 if (usedNumbers.length === totalNumbers) {
                     showCongrats();
                     return;
                 }
-
                 $(this).hide();
 
                 let pick;
-                do { pick = Math.floor(Math.random() * totalNumbers); } while (usedNumbers.includes(pick));
+                do {
+                    pick = Math.floor(Math.random() * totalNumbers);
+                } while (usedNumbers.includes(pick));
                 usedNumbers.push(pick);
 
                 const sliceAngle = 360 / totalNumbers;
                 const targetAngle = pick * sliceAngle + 360 * 5;
                 rotation += targetAngle;
 
-                $("#arrow").css("transition", "transform 4s cubic-bezier(.17,.67,.32,1.2)");
-                $("#arrow").css("transform", `translate(-50%, -100%) rotate(${rotation}deg)`);
+                $("#arrow").css(
+                    "transition",
+                    "transform 4s cubic-bezier(.17,.67,.32,1.2)",
+                );
+                $("#arrow").css(
+                    "transform",
+                    `translate(-50%,-100%) rotate(${rotation}deg)`,
+                );
 
                 $(".number").css("background", "#ffd54f");
                 setTimeout(() => {
@@ -320,7 +397,9 @@
                 $("#question").text(questions[num].q);
                 $("#options").html("");
                 questions[num].o.forEach((opt, i) => {
-                    $("#options").append(`<div class="option" data-i="${i}">${opt}</div>`);
+                    $("#options").append(
+                        `<div class="option" data-i="${i}">${opt}</div>`,
+                    );
                 });
             }
 
@@ -334,7 +413,6 @@
 
                 if (sel == cor) score++;
                 else $(this).addClass("wrong");
-
                 $("#score").text(score);
                 $(".option").off("click");
             });
@@ -351,14 +429,16 @@
             });
 
             function showCongrats() {
-                $("#wheel, #questionCard, #spinBtn").hide();
+                $("#wheel,#questionCard,#spinBtn").hide();
                 $("#congratsPage").fadeIn();
                 const messages = [
                     `You scored ${score}/${totalNumbers}. Excellent! 🎉`,
                     `You got ${score}/${totalNumbers}. Keep shining! ✨`,
-                    `Score: ${score}/${totalNumbers}. You're amazing! 🌟`
+                    `Score: ${score}/${totalNumbers}. You're amazing! 🌟`,
                 ];
-                $("#finalMessage").text(messages[Math.floor(Math.random() * messages.length)]);
+                $("#finalMessage").text(
+                    messages[Math.floor(Math.random() * messages.length)],
+                );
                 confettiBlast();
             }
 
@@ -369,25 +449,30 @@
             function confettiBlast() {
                 const container = $("#confettiContainer");
                 container.html("");
-                const colors = ["#ffd54f", "#ffcc80", "#f3722c", "#fff176", "#ffe082"];
+                const colors = [
+                    "#ffd54f",
+                    "#ffcc80",
+                    "#f3722c",
+                    "#fff176",
+                    "#ffe082",
+                ];
                 const numConfetti = 200;
-
                 for (let i = 0; i < numConfetti; i++) {
                     const confetti = $("<div class='confettiPiece'></div>");
                     const size = Math.random() * 8 + 4 + "px";
                     confetti.css({
                         width: size,
                         height: size,
-                        backgroundColor: colors[Math.floor(Math.random() * colors.length)],
+                        backgroundColor:
+                            colors[Math.floor(Math.random() * colors.length)],
                         left: Math.random() * window.innerWidth + "px",
                         top: Math.random() * -20 + "px",
                         transform: `rotate(${Math.random() * 360}deg)`,
                         animationDuration: 2 + Math.random() * 3 + "s",
-                        opacity: Math.random() * 0.9 + 0.1
+                        opacity: Math.random() * 0.9 + 0.1,
                     });
                     container.append(confetti);
                 }
-
                 setTimeout(() => container.html(""), 5000);
             }
         });
