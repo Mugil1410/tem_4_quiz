@@ -311,8 +311,8 @@
                 score++;
               } else {
                 $(this).removeClass("btn-light").addClass("btn-danger");
-                sadSound.currentTime = 0;
-                sadSound.play();
+                .currentTime = 0;
+                sadSound.play(sadSound);
                 $(".option-btn").each(function (idx) {
                   if (idx === q.a)
                     $(this).removeClass("btn-light").addClass("btn-success");

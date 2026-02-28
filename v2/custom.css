@@ -1,0 +1,73 @@
+body {
+            background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+        }
+
+        #wheelWrapper {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: auto;
+        }
+
+        #wheelContainer {
+            width: 100%;
+            height: 100%;
+        }
+
+        #spin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 18px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            color: white;
+            transition: 0.3s;
+        }
+
+        #spin:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        #landingEntry {
+            font-size: 42px;
+            font-weight: bold;
+            min-height: 60px;
+        }
+
+        .entryText {
+            font-size: 18px;
+            fill: #111;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
