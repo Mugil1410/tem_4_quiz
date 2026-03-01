@@ -1,73 +1,114 @@
 body {
-            background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            color: white;
-        }
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%; /* <-- this is key */
+    animation: gradient 15s ease infinite;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    padding: 10px;
+}
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
-        }
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
-        #wheelWrapper {
-            position: relative;
-            width: 400px;
-            height: 400px;
-            margin: auto;
-        }
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
 
-        #wheelContainer {
-            width: 100%;
-            height: 100%;
-        }
+#wheelWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 1 / 1;
+    margin: auto;
+}
 
-        #spin {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 18px;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-            color: white;
-            transition: 0.3s;
-        }
+#wheelContainer {
+    width: 100%;
+    height: 100%;
+}
 
-        #spin:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%) scale(1.1);
-        }
+#spin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25%;
+    height: 25%;
+    min-width: 80px;
+    min-height: 80px;
+    max-width: 110px;
+    max-height: 110px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 16px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    color: white;
+    transition: 0.3s;
+}
 
-        #landingEntry {
-            font-size: 42px;
-            font-weight: bold;
-            min-height: 60px;
-        }
+#spin:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%) scale(1.1);
+}
 
-        .entryText {
-            font-size: 18px;
-            fill: #111;
-            font-weight: bold;
-        }
+#landingEntry {
+    font-size: 32px;
+    font-weight: bold;
+    min-height: 60px;
+    word-break: break-word;
+}
 
-        footer {
-            text-align: center;
-            padding: 15px;
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
+.entryText {
+    font-size: 16px;
+    fill: #111;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    padding: 12px;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 📱 Extra Small Devices */
+@media (max-width: 576px) {
+
+    .glass-card {
+        padding: 15px;
+    }
+
+    #landingEntry {
+        font-size: 24px;
+    }
+
+    .entryText {
+        font-size: 12px;
+    }
+
+    #spin {
+        font-size: 14px;
+    }
+}

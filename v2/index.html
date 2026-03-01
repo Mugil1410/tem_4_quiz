@@ -7,7 +7,6 @@
     <title>Team 4 Quiz</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-
     <link rel="stylesheet" href="custom.css">
 </head>
 
@@ -15,11 +14,28 @@
     <div class="container text-center mt-4">
         <div class="glass-card mx-auto col-lg-6">
             <h3 id="project-name" class="mb-3 text-secondary">Team 4 Quiz</h3>
-            <div id="landingEntry" class="mb-3">Press Spin</div>
+            <div id="landingEntry" class="mb-3"></div>
 
-            <div id="wheelWrapper">
+            <div id="welcomeCard">
+                
+                <h1>Welcome to Team 4 Quiz!</h1>
+
+                <div style="font-size:40px; margin:20px 0;">
+                    🧠 ❓ 🎯
+                </div>
+
+                <p style="font-size:18px; margin-bottom:25px;">
+                    Get ready! 15 Questions await you.
+                </p>
+
+                <button id="startQuizBtn" class="btn btn-primary px-4">
+                    Start Quiz
+                </button>
+            </div>
+
+            <div id="wheelWrapper" class="d-none">
                 <div id="wheelContainer"></div>
-                <button id="spin">SPIN</button>
+                <button id="spin">Spin</button>
             </div>
 
             <!-- Question Section -->
@@ -42,390 +58,14 @@
     <audio id="happySound" src="../sounds/happy.mp3"></audio>
     <audio id="sadSound" src="../sounds/sad.mp3"></audio>
 
-    <footer id="team-footer"></footer>
+    <footer id="teamMembers"></footer>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="data.js"></script>
     <script src="../questions.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-    <script>
-        var spinButton = document.querySelector("#spin");
-        var landingEntryText = document.querySelector("#landingEntry");
-
-        var questionBox = document.getElementById("questionBox");
-        var questionText = document.getElementById("questionText");
-        var optionsBox = document.getElementById("optionsBox");
-        var spinAgainBtn = document.getElementById("spinAgainBtn");
-
-        var score = 0;
-        var answeredQuestions = [];
-
-        var totalAnswered = 0;
-        var testLimit = 15; // change to 15 later
-
-        var entries = [];
-        for (var i = 1; i <= 15; i++) {
-            entries.push(i.toString());
-        }
-
-        var usedNumbers = [];
-
-        var wheel = new Wheel(entries, wheelSliceColors);
-
-        wheel.spinDone = function () {
-            spinSound.pause();
-            if (usedNumbers.length === entries.length) {
-                landingEntryText.innerText = "Game Over";
-                spinButton.disabled = true;
-                spinButton.classList.add("opacity-50");
-                return;
-            }
-
-            var result = wheel.getCurrentEntry();
-
-            if (usedNumbers.includes(result)) {
-                var available = entries.filter((e) => !usedNumbers.includes(e));
-                var forced = available[0];
-                var index = entries.indexOf(forced);
-                wheel.angle = (index / entries.length) * (Math.PI * 2);
-                result = forced;
-            }
-
-            usedNumbers.push(result);
-            landingEntryText.innerText = result;
-
-            // Get question index
-            var questionIndex = parseInt(result) - 1;
-
-            // Get question object
-            var question = questions[questionIndex];
-
-            // Safety check
-            if (!question) return;
-
-            // Set question text
-            questionText.innerText = question.q;
-
-            // Clear old options
-            optionsBox.innerHTML = "";
-
-            // Create option buttons
-            question.o.forEach(function (option, i) {
-                var btn = document.createElement("button");
-                btn.className = "btn btn-outline-light d-block w-100 mb-2";
-                btn.innerText = option;
-
-                btn.onclick = function () {
-                    checkAnswer(i, question.a);
-                };
-
-                optionsBox.appendChild(btn);
-            });
-
-            // Show question
-            questionBox.classList.remove("d-none");
-
-            // Hide wheel
-            document.getElementById("wheelWrapper").classList.add("d-none");
-
-            spinButton.style.visibility = "visible";
-        };
-
-        spinButton.onclick = function () {
-            if (usedNumbers.length === entries.length) {
-                landingEntryText.innerText = "Game Over";
-                return;
-            }
-
-            if (wheel.spin()) {
-                spinSound.currentTime = 0;
-                spinSound.play();
-                landingEntryText.innerText = "";
-                spinButton.style.visibility = "hidden";
-            }
-        };
-
-        loop();
-
-        function loop() {
-            wheel.update();
-            requestAnimationFrame(loop);
-        }
-
-        function Wheel(entries, colorScheme) {
-            this.entries = entries;
-            this.colorScheme = colorScheme;
-            this.size = 400;
-
-            this.isSpinning = false;
-            this.friction = 8;
-            this.angle = Math.PI / this.entries.length;
-            this.angularVelocity = 0;
-            this.dt = 1 / 60;
-
-            this.svg = createElement(
-                "svg",
-                document.querySelector("#wheelContainer"),
-            );
-            this.svg.setAttribute("viewBox", `0 0 ${this.size} ${this.size}`);
-            this.svg.setAttribute("width", "100%");
-            this.svg.setAttribute("height", "100%");
-
-            this.group = createElement("g", this.svg);
-            this.group.style.transformOrigin = "center";
-
-            for (var i = 0; i < this.entries.length; i++) {
-                var arc = createElement("path", this.group);
-                arc.setAttribute("fill", this.colorScheme[i]);
-
-                var radius = this.size * 0.47;
-                var angle = (-i / this.entries.length) * Math.PI * 2;
-                var offset = (Math.PI * 2) / this.entries.length;
-
-                setArc(arc, this.size / 2, this.size / 2, radius, angle, offset);
-
-                var text = createElement("text", this.group);
-                text.setAttribute("text-anchor", "middle");
-                text.setAttribute("alignment-baseline", "middle");
-                text.setAttribute("class", "entryText");
-
-                text.style.transform = `translate(${this.size / 2}px, ${this.size / 2}px)
-       rotate(${angle - offset / 2 + Math.PI}rad)
-       translateX(${-radius * 0.75}px)`;
-
-                text.textContent = this.entries[i];
-            }
-
-            var arrow = createElement("path", this.svg);
-            arrow.setAttribute("fill", "white");
-            arrow.setAttribute(
-                "d",
-                [
-                    "M",
-                    this.size / 2,
-                    this.size * 0.05,
-                    "L",
-                    this.size * 0.46,
-                    0,
-                    "L",
-                    this.size * 0.54,
-                    0,
-                    "Z",
-                ].join(" "),
-            );
-
-            this.spin = function () {
-                if (!this.isSpinning) {
-                    this.isSpinning = true;
-                    this.angularVelocity = 18;
-                    return true;
-                }
-                return false;
-            };
-
-            this.update = function () {
-                if (this.isSpinning) {
-                    this.angularVelocity -=
-                        Math.min(
-                            Math.abs(this.angularVelocity) / this.dt,
-                            this.friction,
-                        ) *
-                        Math.sign(this.angularVelocity) *
-                        this.dt;
-
-                    this.angle += this.angularVelocity * this.dt;
-
-                    if (Math.abs(this.angularVelocity) < 0.2) {
-                        this.isSpinning = false;
-                        this.spinDone();
-                    }
-                }
-
-                this.group.style.transform = `rotate(${this.angle - Math.PI / 2}rad)`;
-            };
-
-            this.getCurrentEntry = function () {
-                return this.entries[
-                    Math.floor(
-                        ((this.angle % (Math.PI * 2)) / (Math.PI * 2)) *
-                        this.entries.length,
-                    )
-                ];
-            };
-
-            this.spinDone = function () { };
-        }
-
-        function setArc(element, x, y, radius, startAngle, offset) {
-            offset = Math.PI * 2.0001 - (offset % (Math.PI * 2));
-
-            var d = [
-                "M",
-                x + Math.cos(startAngle) * radius,
-                y + Math.sin(startAngle) * radius,
-                "A",
-                radius,
-                radius,
-                0,
-                offset % (Math.PI * 2) > Math.PI ? 0 : 1,
-                0,
-                x + Math.cos(startAngle + offset) * radius,
-                y + Math.sin(startAngle + offset) * radius,
-                "L",
-                x,
-                y,
-                "Z",
-            ].join(" ");
-
-            element.setAttribute("d", d);
-        }
-
-        function createElement(type, parent) {
-            var element = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                type,
-            );
-            if (parent != null) parent.appendChild(element);
-            return element;
-        }
-
-        function loadProjectName() {
-            // Set browser title
-            document.title = projectName;
-
-            // Set project name in page
-            const projectElement = document.getElementById("project-name");
-            if (projectElement) {
-                projectElement.textContent = projectName;
-            }
-        }
-
-        function loadTeamMembers() {
-            const footer = document.getElementById("team-footer");
-
-            const membersHTML = teamMembers
-                .map((member) => `<strong>${member}</strong>`)
-                .join(" | ");
-
-            footer.innerHTML = `Team Members: ${membersHTML}`;
-        }
-
-        function checkAnswer(selected, correct) {
-            var buttons = optionsBox.querySelectorAll("button");
-
-            buttons.forEach(function (btn, i) {
-                btn.disabled = true;
-
-                if (i === correct) {
-                    btn.classList.remove("btn-outline-light");
-                    btn.classList.add("btn-success");
-                }
-
-                if (i === selected && i !== correct) {
-                    btn.classList.remove("btn-outline-light");
-                    btn.classList.add("btn-danger");
-                }
-            });
-
-            totalAnswered++;
-
-            if (selected === correct) {
-                score++;
-
-                happySound.currentTime = 0;
-                happySound.play();
-
-                // 🎉 Big celebration confetti
-                confetti({
-                    particleCount: 200,
-                    spread: 120,
-                    startVelocity: 60,
-                    scalar: 1.2,
-                    origin: { y: 0.6 }
-                });
-
-                // Side blast confetti
-                confetti({
-                    particleCount: 80,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 }
-                });
-
-                confetti({
-                    particleCount: 80,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 }
-                });
-
-            } else {
-                sadSound.currentTime = 0;
-                sadSound.play();
-
-            }
-
-            // Show Spin Again button
-            spinAgainBtn.classList.remove("d-none");
-
-            // 🚀 Show result after 3 questions (for testing)
-            if (totalAnswered >= testLimit) {
-                setTimeout(showFinalResult, 1500);
-            }
-        }
-
-        function showFinalResult() {
-            questionBox.classList.add("d-none");
-            document.getElementById("wheelWrapper").classList.add("d-none");
-            spinButton.disabled = true;
-
-            var message = "";
-
-            if (score >= 13) {
-                message = "🔥 Quiz Champion!";
-            } else if (score >= 10) {
-                message = "👏 Excellent Performance!";
-            } else if (score >= 7) {
-                message = "🙂 Good Job!";
-            } else {
-                message = "💪 Keep Practicing!";
-            }
-
-            landingEntryText.innerHTML = `
-                <div style="font-size:28px;">🎯 Final Score</div>
-                <div style="font-size:48px; margin:10px 0;">${score} / ${testLimit}</div>
-                <div style="font-size:20px;">${message}</div>
-            `;
-
-            // Mega celebration for final
-            confetti({
-                particleCount: 400,
-                spread: 180,
-                startVelocity: 70,
-                scalar: 1.3,
-                origin: { y: 0.6 }
-            });
-        }
-
-        spinAgainBtn.onclick = function () {
-            // Hide question section
-            questionBox.classList.add("d-none");
-
-            // Hide Spin Again button again
-            spinAgainBtn.classList.add("d-none");
-
-            // Show wheel
-            document.getElementById("wheelWrapper").classList.remove("d-none");
-
-            landingEntryText.innerText = "Press Spin";
-        };
-
-        // Load after DOM ready
-        document.addEventListener("DOMContentLoaded", function () {
-            loadProjectName();
-            loadTeamMembers();
-        });
-    </script>
+    <script src="./wheel.js"></script>
+    <script src="./custom.js"></script>
 </body>
 
 </html>
